@@ -126,6 +126,20 @@ class Queue(object):
         job = Job.create(f, *args, connection=self.connection, **kwargs)
         return self.enqueue_job(job, timeout=timeout)
 
+    def enqueue_from_name(self, func_name, *args, **kwargs):
+        """Creates a job to represent the delayed function call and enqueues
+        it.
+
+        Expects the function to call, along with the arguments and keyword
+        arguments.
+
+        The special keyword `timeout` is reserved for `enqueue()` itself and
+        it won't be passed to the actual job function.
+        """
+        timeout = kwargs.pop('timeout', self._default_timeout)
+        job = Job.create_from_name(func_name, *args, connection=self.connection, **kwargs)
+        return self.enqueue_job(job, timeout=timeout)
+
     def enqueue_job(self, job, timeout=None, set_meta_data=True):
         """Enqueues a job for delayed execution.
 

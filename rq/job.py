@@ -56,6 +56,19 @@ class Job(object):
         job.description = job.get_call_string()
         return job
 
+    @classmethod
+    def create_from_name(cls, func_name, *args, **kwargs):
+        """Creates a new Job instance for the given function, arguments, and
+        keyword arguments.
+        """
+        connection = kwargs.pop('connection', None)
+        job = cls(connection=connection)
+        job._func_name = func_name
+        job._args = args
+        job._kwargs = kwargs
+        job.description = job.get_call_string()
+        return job
+
     @property
     def func_name(self):
         return self._func_name

@@ -68,7 +68,6 @@ class TestQueue(RQTestCase):
 
         self.assertEquals(q.count, 2)
 
-
     def test_enqueue(self):  # noqa
         """Enqueueing job onto queues."""
         q = Queue()
@@ -76,6 +75,20 @@ class TestQueue(RQTestCase):
 
         # say_hello spec holds which queue this is sent to
         job = q.enqueue(say_hello, 'Nick', foo='bar')
+        job_id = job.id
+
+        # Inspect data inside Redis
+        q_key = 'rq:queue:default'
+        self.assertEquals(self.testconn.llen(q_key), 1)
+        self.assertEquals(self.testconn.lrange(q_key, 0, -1)[0], job_id)
+
+    def test_enqueue_from_name(self):  # noqa
+        """Enqueueing job onto queues."""
+        q = Queue()
+        self.assertEquals(q.is_empty(), True)
+
+        # say_hello spec holds which queue this is sent to
+        job = q.enqueue_from_name("tests.fixtures.say_hello", 'Nick', foo='bar')
         job_id = job.id
 
         # Inspect data inside Redis
