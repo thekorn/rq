@@ -16,7 +16,6 @@ class TestQueue(RQTestCase):
         q = Queue()
         self.assertEquals(q.name, 'default')
 
-
     def test_equality(self):  # noqa
         """Mathematical equality of queues."""
         q1 = Queue('foo')
@@ -27,7 +26,6 @@ class TestQueue(RQTestCase):
         self.assertEquals(q2, q1)
         self.assertNotEquals(q1, q3)
         self.assertNotEquals(q2, q3)
-
 
     def test_empty_queue(self):  # noqa
         """Emptying queues."""
@@ -88,7 +86,7 @@ class TestQueue(RQTestCase):
         self.assertEquals(q.is_empty(), True)
 
         # say_hello spec holds which queue this is sent to
-        job = q.enqueue_from_name("tests.fixtures.say_hello", 'Nick', foo='bar')
+        job = q.enqueue("tests.fixtures.say_hello", 'Nick', foo='bar')
         job_id = job.id
 
         # Inspect data inside Redis
